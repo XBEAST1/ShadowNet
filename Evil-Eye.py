@@ -112,6 +112,13 @@ try:
                         # This creates a list of dictionaries with the keys as specified in the fieldnames.
                         csv_h.seek(0)
                         csv_reader = csv.DictReader(csv_h, fieldnames=fieldnames)
+                        for row in csv_reader:
+                            if row["BSSID"] == "BSSID":
+                                pass
+                            elif row["BSSID"] == "Station MAC":
+                                break
+                            elif check_for_essid(row["ESSID"], active_wireless_networks):
+                                active_wireless_networks.append(row)
         print("Scanning. Press Ctrl+C when you want to select which wireless network you want to attack.\n")
         print("No |\tBSSID              |\tPower |\tESSID                         |")
         print("___|\t___________________|\t______|\t______________________________|")
