@@ -68,13 +68,13 @@ if len(check_wifi_result) == 0:
     exit()
 
 # Menu to select WiFi interface from
-print("The following WiFi interfaces are available:")
+print("The following WiFi interfaces are available:\n")
 for index, item in enumerate(check_wifi_result):
     print(f"{index} - {item}")
 
 # Ensure the WiFi interface selected is valid. Simple menu with interfaces to select from.
 while True:
-    wifi_interface_choice = input("Please select the interface you want to use for the attack: ")
+    wifi_interface_choice = input("\nPlease select the interface you want to use for the attack: ")
     try:
         if check_wifi_result[int(wifi_interface_choice)]:
             break
@@ -158,4 +158,5 @@ os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
 os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
 os.system (f'ifconfig {iface} up')
 os.system ('service NetworkManager restart')
+print ('\n')
 os.system (f'macchanger -s {iface}')
