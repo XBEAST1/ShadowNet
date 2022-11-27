@@ -7,3 +7,5 @@ Requirments:
 3.python3
 
 Tutorial : https://youtu.be/0Uu-i9TJlkQ
+
+Note : Use in Kali Linux
