@@ -1,4 +1,4 @@
-Script Requirments:
+Requirments:
 
 1.macchanger
 
