@@ -12,8 +12,8 @@ import csv
 import os
 # We want to use time.sleep()
 import time
-# Create a timestamp for .csv filename
-from datetime import datetime
+# We want to check that after enabling monitor mode our interface name is changed or not
+import glob
 
 # We declare an empty list where all active wireless networks will be saved to.
 active_wireless_networks = []
@@ -58,7 +58,7 @@ if not 'SUDO_UID' in os.environ.keys():
 os.system ('screen -d -m rm *.csv')
 
 # Regex to find wireless interfaces, we're making the assumption they will all be wlan0 or higher.
-wlan_pattern = re.compile("^wlan[0-9]+")
+wlan_pattern = re.compile("wlan[0-9]")
 
 check_wifi_result = wlan_pattern.findall(subprocess.run(["iwconfig"], capture_output=True).stdout.decode())
 
@@ -93,9 +93,13 @@ kill_confilict_processes =  subprocess.run(["sudo", "airmon-ng", "check", "kill"
 # Put wireless interface in Monitored mode
 print("Putting Wifi adapter into monitored mode:")
 put_in_monitored_mode = subprocess.run(["sudo", "airmon-ng", "start", iface])
-os.system (f'ifconfig {iface} down')
-os.system (f'iwconfig {iface} mode monitor')
-os.system (f'ifconfig {iface} up')
+
+# Check if the selected interface name changed to wlan*mon after enabling monitor mode
+check_iface = glob.glob('/sys/class/net/wlan*mon')
+
+if check_iface:
+    # Get the first matching interface
+    iface = os.path.basename(check_iface[0])
 
 # Discover access points
 discover_access_points = os.system("screen -d -m sudo airodump-ng -w file --write-interval 1 --output-format csv" + ' ' + iface)
@@ -155,7 +159,7 @@ macspoof = input("\nClients MAC Addresses Shows In The Station Tab. If It's Empt
 
 os.system (f'airmon-ng stop {iface}')
 os.system (f'ifconfig {iface} down')
-os.system (f'screen -d -m iwconfig {iface} mode managed\n'*10)
+os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
 os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
 os.system (f'ifconfig {iface} up')
 os.system ('service NetworkManager restart')
