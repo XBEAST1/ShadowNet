@@ -3,7 +3,7 @@ Requirments:
 ```apt install macchanger```
 <br>
 
-``` apt install aircrack-ng```
+```apt install aircrack-ng```
 <br>
 
 ```apt install python3```
