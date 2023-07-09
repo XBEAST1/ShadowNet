@@ -1,11 +1,13 @@
 Requirments:
 
-1.macchanger
+```apt install macchanger```
+<br>
 
-2.aircrack-ng
+``` apt install aircrack-ng```
+<br>
 
-3.python3
+```apt install python3```
 
-Tutorial : https://youtu.be/0Uu-i9TJlkQ
+Usage:
 
-Note : Use in Kali Linux
+```python3 Shadow-Net.py```
