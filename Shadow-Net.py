@@ -52,7 +52,7 @@ title = ("""
  \______/ |__/  |__/ \_______/ \_______/ \______/  \_____/\___/       |__/  \__/ \_______/   \___/  
 
    by XBEAST ~ Ignite the Dark Flame ~ Journey into the Abyss with Shadow Net's Fiendish Power!
-                                            V3.3
+                                            V3.4
                             Github Link: https://github.com/XBEAST1""")
          
 colored_text = colored(title, 'blue')
@@ -178,8 +178,12 @@ if "mon" in iface:
     iface = iface.replace("mon", "")
 
 os.system (f'ifconfig {iface} down')
+time.sleep(1)
 os.system (f'screen -d -m iwconfig {iface} mode auto\n'*10)
+time.sleep(1)
 os.system (f'screen -d -m macchanger -m {macspoof} {iface}\n'*100)
+time.sleep(1)
 os.system (f'ifconfig {iface} up')
-os.system ('service NetworkManager restart')
+time.sleep(1)
+os.system ('screen -d -m service NetworkManager restart')
 os.system (f'\nmacchanger -s {iface}')
